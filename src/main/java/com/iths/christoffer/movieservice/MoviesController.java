@@ -17,7 +17,7 @@ import java.net.http.HttpClient;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-//@EnableEurekaClient
+@EnableEurekaClient
 @RestController
 @Slf4j
 @RequestMapping("/api/v1/movies")
@@ -50,7 +50,7 @@ public class MoviesController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/admin")
+    @PostMapping
     public ResponseEntity<EntityModel<Movie>> createMovie(@RequestBody Movie movie) {
         log.info("Called: createMovie()");
         var m = repository.save(movie);
@@ -60,7 +60,7 @@ public class MoviesController {
         return new ResponseEntity<>(assembler.toModel(m), headers, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/admin/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<EntityModel<Movie>> updateMovie(@RequestBody Movie newMovie, @PathVariable long id) {
         log.info("Called: updateMovie()");
         return repository.findById(id).map(m -> {
@@ -77,7 +77,7 @@ public class MoviesController {
         });
     }
 
-    @PutMapping("/admin/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<EntityModel<Movie>> replaceMovie(@RequestBody Movie newMovie, @PathVariable long id) {
         log.info("Called: replaceMovie()");
         return repository.findById(id).map(m -> {
@@ -91,7 +91,7 @@ public class MoviesController {
                 new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/admin/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMovie(@PathVariable long id) {
         log.info("Called: deleteMovie");
         if (repository.existsById(id)) {
